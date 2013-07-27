@@ -1,12 +1,22 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 import argparse
-from httpshell import httpshell
-from httpshell import version
+import os
+import sys
+
+
+try:
+    from httpshell import httpshell
+    from httpshell import version
+except ImportError:
+    sys.path.append(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0]), 'httpshell')))
+    from httpshell import httpshell
+    from httpshell import version
 
 
 def parse_command_line():
+
     parser = argparse.ArgumentParser(
         description="An interactive shell for issuing HTTP commands to a web server or REST API")
 
@@ -30,11 +40,18 @@ def parse_command_line():
         help="Do not respect cookies sent by host")
 
     parser.add_argument(
-        "-i", "--no-headers",
+        "-n", "--no-headers",
         action="store_false",
         default=True,
         dest="show_headers",
         help="Suppress the display of headers")
+
+    parser.add_argument(
+        "-i", "--insecure",
+        action="store_true",
+        default=False,
+        dest="insecure_ssl",
+        help="Ignore any untrusted or expired SSL certificates")
 
     parser.add_argument(
         "--version",
