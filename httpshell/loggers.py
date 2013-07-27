@@ -53,24 +53,34 @@ class AnsiLogger(object):
                             guess_lexer(data),
                             TerminalFormatter())
 
+    def print_command(self, command, params=None):
+        if params is None:
+            print " ", colorize(command, Color.WHITE, Attribute.BRIGHT)
+        else:
+            print " ", colorize(command, Color.WHITE, Attribute.BRIGHT), \
+                colorize(params, Color.GREY, Attribute.BRIGHT)
+
     def print_help(self):
         print "Verbs"
-        print "  head", colorize("[</path/to/resource>]", Color.GREY)
-        print "  get", colorize("[</path/to/resource>] [| <external command>]", Color.GREY)
-        print "  post", colorize("[</path/to/resource>] [| <external command>]", Color.GREY)
-        print "  put", colorize("[</path/to/resource>] [| <external command>]", Color.GREY)
-        print "  delete", colorize("</path/to/resource>", Color.GREY, Attribute.BRIGHT), colorize(" [| <external command>]", Color.GREY)
-        print "  options", colorize("[</path/to/resource>] [| <external command>]", Color.GREY)
-        print "  trace", colorize("[</path/to/resource>] [| <external command>]", Color.GREY)
+        self.print_command("head", "[</path/to/resource>]")
+        self.print_command("get", "[</path/to/resource>] [| <external command>]")
+        self.print_command("post", "[</path/to/resource>] [| <external command>]")
+        self.print_command("put", "[</path/to/resource>] [| <external command>]")
+        self.print_command("delete", "</path/to/resource> [| <external command>]")
+        self.print_command("options", "[</path/to/resource>] [| <external command>]")
+        self.print_command("trace", "[</path/to/resource>] [| <external command>]")
+
         print "Navigation"
-        print "  cd", colorize("</path/to/resource> or ..", Color.GREY, Attribute.BRIGHT)
-        print "  open",  colorize("<url>", Color.GREY, Attribute.BRIGHT)
+        self.print_command("cd", "</path/to/resource> or ..")
+        self.print_command("open", "<url>")
+
         print "Metacommands"
-        print "  headers", colorize("[<name>]:[<value>]", Color.GREY)
-        print "  tackons", colorize("[<name>]=[<value>]", Color.GREY)
-        print "  cookies", colorize("[<name>]=[<value>]", Color.GREY)
-        print "  debuglevel", colorize("[#]", Color.GREY)
-        print "  quit"
+        self.print_command("headers", "[<name>]:[<value>]")
+        self.print_command("tackons", "[<name>]=[<value>]")
+        self.print_command("cookies", "[<name>]=[<value>]")
+        self.print_command("debuglevel", "[#]")
+        self.print_command("quit")
+
         print
         print "Full documentation available at https://github.com/chrislongo/HttpShell#readme"
 
