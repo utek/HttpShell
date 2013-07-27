@@ -21,6 +21,7 @@ class HttpShell(object):
             "trace": self.trace,
             "options": self.options,
             "cd": self.set_path,
+            "pwd": self.print_cwd,
         }
 
         self.meta_commands = {
@@ -212,6 +213,18 @@ class HttpShell(object):
             path = "".join(self.path.rsplit("/", 1)[:1])
 
         self.path = path if path else "/"
+
+    def print_cwd(self, args=None):
+        host = self.url.netloc
+        # check for authentication credentials
+        if "@" in host:
+            split = host.split("@")
+            if len(split) > 1:
+                host = split[1]
+            else:
+                host = split[0]
+        uri = "{0}://{1}{2}".format(self.url.scheme, host, self.path)
+        print uri
 
     def set_debuglevel(self, level=None):
         if not level:

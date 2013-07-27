@@ -243,6 +243,7 @@ Verbs
 Navigation
   cd </path/to/resource> or ..
   open <url>
+  pwd
 Metacommands
   headers [<name>]:[<value>]
   params [<name>]=[<value>]

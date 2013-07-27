@@ -73,6 +73,7 @@ class AnsiLogger(object):
         print "Navigation"
         self.print_command("cd", "</path/to/resource> or ..")
         self.print_command("open", "<url>")
+        self.print_command("pwd")
 
         print "Metacommands"
         self.print_command("headers", "[<name>]:[<value>]")
