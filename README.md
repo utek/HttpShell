@@ -104,7 +104,7 @@ Javascript, etc).
 ###Auto-format responses
 
 The ```--format``` command-line parameter will tell httpsh to automatically 
-format any JSON or XML response returned by a server.
+format any JSON, XML, or HTML response returned by a server.
 
 ```
 chris@macbookpro:/$ httpsh http://localhost:8888 --format
