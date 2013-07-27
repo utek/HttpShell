@@ -27,11 +27,12 @@ class HttpShell(object):
             "help": self.help,
             "?": self.help,
             "headers": self.modify_headers,
-            "tackons": self.modify_tackons,
+            "params": self.modify_params,
             "cookies": self.modify_cookies,
             "open": self.open_host,
             "debuglevel": self.set_debuglevel,
-            "quit": self.exit
+            "quit": self.exit,
+            "exit": self.exit
         }
 
         # dispatch map is http + meta maps
@@ -44,7 +45,7 @@ class HttpShell(object):
 
         self.args = args
         self.headers = {}
-        self.tackons = {}
+        self.params = {}
         self.cookies = {}
 
         self.args.debuglevel = 0
@@ -147,12 +148,12 @@ class HttpShell(object):
             self.logger.print_headers(self.headers.items(), sending=True)
 
     # handles params meta-command
-    def modify_tackons(self, args=None):
+    def modify_params(self, args=None):
         if args and len(args) > 0:
             # args will be param=[value]
 
             if not "=" in args:  # it's not foo=bar it's just foo
-                self.tackons[args] = ""
+                self.params[args] = ""
             else:
                 a = args.split("=", 1)
                 key = a[0]
@@ -161,12 +162,12 @@ class HttpShell(object):
                     value = a[1]
 
                 if len(value) > 0:
-                    self.tackons[key] = value
-                elif key in self.tackons:
-                    del self.tackons[key]  # if no value provided, delete
+                    self.params[key] = value
+                elif key in self.params:
+                    del self.params[key]  # if no value provided, delete
         else:
-            # print send tackons
-            self.logger.print_tackons(self.tackons.items())
+            # print send params
+            self.logger.print_params(self.params.items())
 
     def modify_cookies(self, args=None):
         if args and len(args) > 0:
@@ -221,7 +222,7 @@ class HttpShell(object):
             except:
                 pass
 
-    # converts tackon dict to query params
+    # converts params dict to query params
     def dict_to_query(self, map):
         l = []
         for k, v in sorted(map.items()):
@@ -244,10 +245,10 @@ class HttpShell(object):
 
         return s
 
-    # modifies the path for tackon query params
+    # modifies the path for params query params
     def mod_path(self, path, query=None):
         q = self.combine_queries(
-            query, self.dict_to_query(self.tackons))
+            query, self.dict_to_query(self.params))
 
         if len(q) > 0:
             return path + "?" + q

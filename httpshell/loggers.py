@@ -30,7 +30,7 @@ class AnsiLogger(object):
                 colorize(header[0], Color.BLUE, Attribute.BRIGHT),
                 header[1])
 
-    def print_tackons(self, params):
+    def print_params(self, params):
         for param in params:
             print "{0}{1}{2}".format(
                 colorize(param[0], Color.BLUE, Attribute.BRIGHT),
@@ -76,7 +76,7 @@ class AnsiLogger(object):
 
         print "Metacommands"
         self.print_command("headers", "[<name>]:[<value>]")
-        self.print_command("tackons", "[<name>]=[<value>]")
+        self.print_command("params", "[<name>]=[<value>]")
         self.print_command("cookies", "[<name>]=[<value>]")
         self.print_command("debuglevel", "[#]")
         self.print_command("quit")

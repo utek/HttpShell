@@ -156,14 +156,14 @@ Domain: .google.com,
 Path: /
 ```
 
-###Tack on query parameters.  
+###Add query parameters.  
 
 If you're using an API that requires a key tacked on every URL, rather than 
-typing it every time set a "tackon" and it will be sent automatically:
+typing it every time set a "param" and it will be sent automatically:
 
 ```
-graph.facebook.com:/> tackons access_token=AAACEcEase0c...
-graph.facebook.com:/> tackons
+graph.facebook.com:/> params access_token=AAACEcEase0c...
+graph.facebook.com:/> params
 access_token=AAACEcEase0c...
 
 graph.facebook.com:/> get /me
@@ -245,7 +245,7 @@ Navigation
   open <url>
 Metacommands
   headers [<name>]:[<value>]
-  tackons [<name>]=[<value>]
+  params [<name>]=[<value>]
   cookies [<name>]=[<value>]
   debuglevel [#]
   quit
