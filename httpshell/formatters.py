@@ -1,6 +1,7 @@
 import json
 import xml.dom.minidom
 from StringIO import StringIO
+from bs4 import BeautifulSoup
 
 
 class Formatter(object):
@@ -8,7 +9,7 @@ class Formatter(object):
         self.args = args
 
     def format(text):
-        pass
+        return text
 
 
 class JsonFormatter(Formatter):
@@ -81,6 +82,21 @@ class XmlFormatter(Formatter):
         return formatted
 
 
+class HtmlFormatter(Formatter):
+    def __init__(self, args=None):
+        super(HtmlFormatter, self).__init__(args)
+
+    def format(self, text):
+        formatted = None
+        try:
+            soup = BeautifulSoup(text)
+            formatted = soup.prettify()
+        except:
+            formatted = text
+
+        return formatted
+
+
 JSONTYPES = (
     'application/json',
     'application/x-javascript',
@@ -96,6 +112,10 @@ XMLTYPES = (
     'application/xhtml+xml',
     'text/xml')
 
+HTMLTYPES = (
+    'text/html',
+    'text/x-server-parsed-html'
+)
 
 def format_by_mimetype(text, mimetype):
     formatter = None
@@ -104,6 +124,8 @@ def format_by_mimetype(text, mimetype):
         formatter = JsonFormatter()
     elif mimetype in XMLTYPES:
         formatter = XmlFormatter()
+    elif mimetype in HTMLTYPES:
+        formatter = HtmlFormatter()
 
     if formatter:
         return formatter.format(text)
