@@ -250,6 +250,7 @@ Metacommands
   cookies [<name>]=[<value>]
   debuglevel [#]
   quit
+  exit
 ```
 
 # Installation

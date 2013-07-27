@@ -81,9 +81,10 @@ class AnsiLogger(object):
         self.print_command("cookies", "[<name>]=[<value>]")
         self.print_command("debuglevel", "[#]")
         self.print_command("quit")
+        self.print_command("exit")
 
         print
-        print "Full documentation available at https://github.com/chrislongo/HttpShell#readme"
+        print "Full documentation available at https://github.com/eberle1080/HttpShell#readme"
 
     def print_error(self, text):
         print text
