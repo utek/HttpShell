@@ -328,8 +328,17 @@ class HttpShell(object):
                     except Exception as e:
                         self.logger.print_error("Error: {0}".format(e))
                 else:
-                    self.logger.print_error("Invalid command.")
-            except (EOFError, KeyboardInterrupt):
+                    self.logger.print_error("Invalid command: `" + command + "'")
+            except KeyboardInterrupt:
+                buf = readline.get_line_buffer()
+                if len(buf) > 0:
+                    sys.stdout.write('^C\n')
+                    sys.stdout.flush()
+                else:
+                    sys.stdout.write('\n')
+                    sys.stdout.flush()
+                continue
+            except EOFError:
                 break
 
         print
