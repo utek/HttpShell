@@ -102,17 +102,13 @@ class HttpShell(object):
 
     def post(self, path, pipe=None):
         body = self.input_body()
-
-        if body:
-            http.Http(self.args, self.logger, "POST").run(
-                self.url, path, pipe, self.headers, self.cookies, body)
+        http.Http(self.args, self.logger, "POST").run(
+            self.url, path, pipe, self.headers, self.cookies, body)
 
     def put(self, path, pipe=None):
         body = self.input_body()
-
-        if body:
-            http.Http(self.args, self.logger, "PUT").run(
-                self.url, path, pipe, self.headers, self.cookies, body)
+        http.Http(self.args, self.logger, "PUT").run(
+            self.url, path, pipe, self.headers, self.cookies, body)
 
     def delete(self, path, pipe=None):
         http.Http(self.args, self.logger, "DELETE").run(
