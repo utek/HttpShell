@@ -280,10 +280,14 @@ class HttpShell(object):
         list = []
 
         while True:
-            line = raw_input("... ")
-            if len(line) == 0:
+            try:
+                line = raw_input("... ")
+                list.append(line)
+            except EOFError:
+                line = readline.get_line_buffer()
+                if len(line) > 0:
+                    list.append(line)
                 break
-            list.append(line)
 
         # join list to form string
         params = "".join(list)
@@ -291,6 +295,7 @@ class HttpShell(object):
         if params[:2] == "@{":  # magic JSON -> urlencode invoke char
             params = self.json_to_urlencode(params[1:])
 
+        print
         return params
 
     # converts JSON to url encoded for easier posting forms
