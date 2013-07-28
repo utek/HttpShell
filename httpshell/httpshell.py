@@ -31,6 +31,7 @@ class HttpShell(object):
             "params": self.modify_params,
             "cookies": self.modify_cookies,
             "open": self.open_host,
+            "history": self.print_history,
             "debuglevel": self.set_debuglevel,
             "quit": self.exit,
             "exit": self.exit
@@ -201,6 +202,11 @@ class HttpShell(object):
         if url:
             self.init_host(url)
 
+    def print_history(self, arg=None):
+        hist_size = readline.get_current_history_length()
+        for i in xrange(0, hist_size + 1):
+            print i, readline.get_history_item(i)
+
     # handles cd <path> command
     def set_path(self, path):
         path = path.split("?")[0]  # chop off any query params
@@ -279,6 +285,7 @@ class HttpShell(object):
             try:
                 line = raw_input("... ")
                 list.append(line)
+
             except EOFError:
                 line = readline.get_line_buffer()
                 if len(line) > 0:
@@ -344,6 +351,7 @@ class HttpShell(object):
                         self.logger.print_error("Error: {0}".format(e))
                 else:
                     self.logger.print_error("Invalid command: `" + command + "'")
+
             except KeyboardInterrupt:
                 buf = readline.get_line_buffer()
                 if len(buf) > 0:
@@ -353,6 +361,7 @@ class HttpShell(object):
                     sys.stdout.write('\n')
                     sys.stdout.flush()
                 continue
+
             except EOFError:
                 break
 

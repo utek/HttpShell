@@ -80,6 +80,7 @@ class AnsiLogger(object):
         self.print_command("params", "[<name>]=[<value>]")
         self.print_command("cookies", "[<name>]=[<value>]")
         self.print_command("debuglevel", "[#]")
+        self.print_command("history")
         self.print_command("quit")
         self.print_command("exit")
 

@@ -249,6 +249,7 @@ Metacommands
   params [<name>]=[<value>]
   cookies [<name>]=[<value>]
   debuglevel [#]
+  history
   quit
   exit
 ```
