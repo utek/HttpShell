@@ -104,7 +104,7 @@ Javascript, etc).
 ###Auto-format responses
 
 The ```--format``` command-line parameter will tell httpsh to automatically 
-format any JSON or XML response returned by a server.
+format any JSON, XML, or HTML response returned by a server.
 
 ```
 chris@macbookpro:/$ httpsh http://localhost:8888 --format
@@ -156,14 +156,14 @@ Domain: .google.com,
 Path: /
 ```
 
-###Tack on query parameters.  
+###Add query parameters.  
 
 If you're using an API that requires a key tacked on every URL, rather than 
-typing it every time set a "tackon" and it will be sent automatically:
+typing it every time set a "param" and it will be sent automatically:
 
 ```
-graph.facebook.com:/> tackons access_token=AAACEcEase0c...
-graph.facebook.com:/> tackons
+graph.facebook.com:/> params access_token=AAACEcEase0c...
+graph.facebook.com:/> params
 access_token=AAACEcEase0c...
 
 graph.facebook.com:/> get /me
@@ -243,12 +243,15 @@ Verbs
 Navigation
   cd </path/to/resource> or ..
   open <url>
+  pwd
 Metacommands
   headers [<name>]:[<value>]
-  tackons [<name>]=[<value>]
+  params [<name>]=[<value>]
   cookies [<name>]=[<value>]
   debuglevel [#]
+  history
   quit
+  exit
 ```
 
 # Installation

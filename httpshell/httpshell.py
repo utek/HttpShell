@@ -21,17 +21,20 @@ class HttpShell(object):
             "trace": self.trace,
             "options": self.options,
             "cd": self.set_path,
+            "pwd": self.print_cwd,
         }
 
         self.meta_commands = {
             "help": self.help,
             "?": self.help,
             "headers": self.modify_headers,
-            "tackons": self.modify_tackons,
+            "params": self.modify_params,
             "cookies": self.modify_cookies,
             "open": self.open_host,
+            "history": self.print_history,
             "debuglevel": self.set_debuglevel,
-            "quit": self.exit
+            "quit": self.exit,
+            "exit": self.exit
         }
 
         # dispatch map is http + meta maps
@@ -44,7 +47,7 @@ class HttpShell(object):
 
         self.args = args
         self.headers = {}
-        self.tackons = {}
+        self.params = {}
         self.cookies = {}
 
         self.args.debuglevel = 0
@@ -101,17 +104,13 @@ class HttpShell(object):
 
     def post(self, path, pipe=None):
         body = self.input_body()
-
-        if body:
-            http.Http(self.args, self.logger, "POST").run(
-                self.url, path, pipe, self.headers, self.cookies, body)
+        http.Http(self.args, self.logger, "POST").run(
+            self.url, path, pipe, self.headers, self.cookies, body)
 
     def put(self, path, pipe=None):
         body = self.input_body()
-
-        if body:
-            http.Http(self.args, self.logger, "PUT").run(
-                self.url, path, pipe, self.headers, self.cookies, body)
+        http.Http(self.args, self.logger, "PUT").run(
+            self.url, path, pipe, self.headers, self.cookies, body)
 
     def delete(self, path, pipe=None):
         http.Http(self.args, self.logger, "DELETE").run(
@@ -148,12 +147,12 @@ class HttpShell(object):
             self.logger.print_headers(self.headers.items(), sending=True)
 
     # handles params meta-command
-    def modify_tackons(self, args=None):
+    def modify_params(self, args=None):
         if args and len(args) > 0:
             # args will be param=[value]
 
             if not "=" in args:  # it's not foo=bar it's just foo
-                self.tackons[args] = ""
+                self.params[args] = ""
             else:
                 a = args.split("=", 1)
                 key = a[0]
@@ -162,12 +161,12 @@ class HttpShell(object):
                     value = a[1]
 
                 if len(value) > 0:
-                    self.tackons[key] = value
-                elif key in self.tackons:
-                    del self.tackons[key]  # if no value provided, delete
+                    self.params[key] = value
+                elif key in self.params:
+                    del self.params[key]  # if no value provided, delete
         else:
-            # print send tackons
-            self.logger.print_tackons(self.tackons.items())
+            # print send params
+            self.logger.print_params(self.params.items())
 
     def modify_cookies(self, args=None):
         if args and len(args) > 0:
@@ -204,6 +203,11 @@ class HttpShell(object):
         if url:
             self.init_host(url)
 
+    def print_history(self, arg=None):
+        hist_size = readline.get_current_history_length()
+        for i in xrange(0, hist_size + 1):
+            print i, readline.get_history_item(i)
+
     # handles cd <path> command
     def set_path(self, path):
         path = path.split("?")[0]  # chop off any query params
@@ -212,6 +216,18 @@ class HttpShell(object):
             path = "".join(self.path.rsplit("/", 1)[:1])
 
         self.path = path if path else "/"
+
+    def print_cwd(self, args=None):
+        host = self.url.netloc
+        # check for authentication credentials
+        if "@" in host:
+            split = host.split("@")
+            if len(split) > 1:
+                host = split[1]
+            else:
+                host = split[0]
+        uri = "{0}://{1}{2}".format(self.url.scheme, host, self.path)
+        print uri
 
     def set_debuglevel(self, level=None):
         if not level:
@@ -222,7 +238,7 @@ class HttpShell(object):
             except:
                 pass
 
-    # converts tackon dict to query params
+    # converts params dict to query params
     def dict_to_query(self, map):
         l = []
         for k, v in sorted(map.items()):
@@ -245,10 +261,10 @@ class HttpShell(object):
 
         return s
 
-    # modifies the path for tackon query params
+    # modifies the path for params query params
     def mod_path(self, path, query=None):
         q = self.combine_queries(
-            query, self.dict_to_query(self.tackons))
+            query, self.dict_to_query(self.params))
 
         if len(q) > 0:
             return path + "?" + q
@@ -267,10 +283,15 @@ class HttpShell(object):
         list = []
 
         while True:
-            line = raw_input("... ")
-            if len(line) == 0:
+            try:
+                line = raw_input("... ")
+                list.append(line)
+
+            except EOFError:
+                line = readline.get_line_buffer()
+                if len(line) > 0:
+                    list.append(line)
                 break
-            list.append(line)
 
         # join list to form string
         params = "".join(list)
@@ -278,6 +299,7 @@ class HttpShell(object):
         if params[:2] == "@{":  # magic JSON -> urlencode invoke char
             params = self.json_to_urlencode(params[1:])
 
+        print
         return params
 
     # converts JSON to url encoded for easier posting forms
@@ -329,8 +351,19 @@ class HttpShell(object):
                     except Exception as e:
                         self.logger.print_error("Error: {0}".format(e))
                 else:
-                    self.logger.print_error("Invalid command.")
-            except (EOFError, KeyboardInterrupt):
+                    self.logger.print_error("Invalid command: `" + command + "'")
+
+            except KeyboardInterrupt:
+                buf = readline.get_line_buffer()
+                if len(buf) > 0:
+                    sys.stdout.write('^C\n')
+                    sys.stdout.flush()
+                else:
+                    sys.stdout.write('\n')
+                    sys.stdout.flush()
+                continue
+
+            except EOFError:
                 break
 
         print

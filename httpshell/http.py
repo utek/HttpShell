@@ -77,6 +77,8 @@ class Http(object):
         else:
             http = httplib2.Http()
 
+        http.disable_ssl_certificate_validation = self.args.insecure_ssl
+
         return http
 
     def set_request_cookies(self, cookies, headers):
