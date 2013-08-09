@@ -8,7 +8,7 @@ import sys
 import Cookie
 from urlparse import urlparse
 from urllib import urlencode
-
+import colorama
 
 class HttpShell(object):
     def __init__(self, args):
@@ -59,6 +59,7 @@ class HttpShell(object):
         self.init_host(self.args.url)
 
     def init_readline(self):
+        colorama.init()
         httpsh_dir = os.path.join(os.path.expanduser("~"), ".httpshell/")
         if not os.path.isdir(httpsh_dir):
             os.mkdir(httpsh_dir)

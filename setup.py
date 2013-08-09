@@ -12,7 +12,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-REQUIRES = ["pygments>=1.1.1", "httplib2>=0.7.0", "oauth2>=1.5"]
+REQUIRES = ["pygments>=1.1.1", "httplib2>=0.7.0", "oauth2>=1.5", "colorama>=0.2.5"]
 
 if sys.version_info <= (2, 7):
     REQUIRES.append("argparse>=1.2.1")
@@ -24,7 +24,7 @@ setup(
     packages=["httpshell"],
     install_requires=REQUIRES,
     py_modules=["ez_setup"],
-    scripts=["httpsh"],
+    scripts=["httpsh", "httpsh.bat"],
     author="Chris Longo",
     author_email="chris.longo@gmail.com",
     url="https://github.com/chrislongo/HttpShell/",
